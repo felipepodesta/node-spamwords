@@ -4,14 +4,13 @@ que podem CONTRIBUIR para o seu email cair na caixa de spam (ao invés do inbox)
 
 ```bash
 cat email_marketing.html | node stopwords.js
-/(caro amigo|olá|bom dia|boa noite|tudo bem)/gi: line 151
-/24 Horas/gi: line 186
-/\bforum\b/gi: line 14
-/\bmail\b/gi: line 188
-/\bemail\b/gi: line 35
-/\be-mail\b/gi: line 188
-/\bpedido\b/gi: line 187
-/\bpublic\b/gi: line 1
-/\bthat\b/gi: line 14
-/\byou\b/gi: line 68
+(caro amigo|olá|bom dia|boa noite|tudo bem): line 151
+24 Horas: line 186
+forum: line 14
+mail: line 188
+email: line 35
+e-mail: line 188
+pedido: line 187
+that: line 14
+you: line 68
 ```
