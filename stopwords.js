@@ -5,7 +5,7 @@ var frases = [
     'cancelamento',
     'ordem (da verificação|de dinheiro)',
     'instalar aqui',
-    '(caro amigo|olá|bom dia|boa noite|tudo bem)',
+    '(caro amigo|olá|bom dia|boa noite|boa tarde|tudo bem)',
     'marketing do E-mail',
     'para somente (\\$)',
     'para livre',
