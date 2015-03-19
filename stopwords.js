@@ -1,13 +1,13 @@
 'use strict';
 
 var frases = [
-    'espantar-se',
+    'espantar(-?se)?',
     'cancelamento',
     'ordem (da verificação|de dinheiro)',
     'instalar aqui',
     '(caro amigo|olá|bom dia|boa noite|tudo bem)',
     'marketing do E-mail',
-    'para somente ($)',
+    'para somente (\\$)',
     'para livre',
     'oferta grande',
     'garantia',
@@ -16,8 +16,8 @@ var frases = [
     'prometê-lo',
     'arriscar livre',
     'promotion especial',
-    'este não é Spam',
-    'para ser removido',
+    'não é Spam',
+    'para ser removid(o|a)',
     'unsubscribe',
     'vencedor',
     'clique aqui',
@@ -29,14 +29,12 @@ var frases = [
     'Tenha seu site na Internet',
     'Ganhe dinheiro enviando e-mails',
     'Trabalhe em casa',
-    'Para retirar seu e-mail da lista',
-    'Divulgue sua/seu',
+    'retirar.*(e-?mail)?.*lista',
+    'Divulgue (sua|seu)',
     'Fala sobre não perder tempo',
     '24 Horas',
     '(de|para) sua empresa',
     'hospedagem',
-    'Subject: xx kg',
-    'Subject: V',
     'agas',
     'Abertas',
     'e confira',
@@ -47,15 +45,15 @@ var frases = [
     'perder|perda peso',
     '(desculpe|desculpa).*(incomodo|transtorno)',
     'Consulte-nos!',
-    'Detetive ou Espionagem',
+    '(Detetive|Espionagem)',
     'Despachamos para todo o Brasil',
-    'sobre venda (de listas)? de e-mails?',
+    'venda (de listas?)? de e-?mails?',
     'Telemarketing',
     'Trabalhar em Casa',
-    'e? saiba mais',
+    'e?.*saiba mais',
     'Imperdível',
-    'Aproveite nossa promoção',
-    'agora/já',
+    'Aproveite.*(nossa)?.*promoção',
+    '(agora|já)',
     'curso on-?line',
     'Mala Direta ((de)? e-mail)?',
     'Grátis',
@@ -743,23 +741,11 @@ palavras = [
 ], i;
 
 for(i = 0; i < frases.length; i++) {
-    frases[i] = new RegExp(frases[i], 'ig');
+    frases[i] = [frases[i], new RegExp(frases[i], 'ig')];
 }
 
 for(i = 0; i < palavras.length; i++) {
-    palavras[i] = new RegExp('\\b' + palavras[i] + '\\b', 'ig');
-}
-
-function findLine(content, regex) {
-    var lines = content.split(/\r\n|\n/g);
-
-    for (var i = 0, len = lines.length; i < len; i++) {
-        if (regex.test(lines[i])) {
-            return i + 1;
-        }
-    }
-
-    return -1;
+    palavras[i] = [palavras[i], new RegExp('\\b' + palavras[i] + '\\b', 'ig')];
 }
 
 var content = '';
@@ -769,15 +755,27 @@ process.stdin.on('data', function(data){
 });
 
 process.stdin.on('end', function(){
+    var lines = content.split(/\r\n|\n/g), line;
+
+    function findLine(regex) {
+        for (var x = 0, len = lines.length; x < len; x++) {
+            if (regex.test(lines[x])) {
+                return x + 1;
+            }
+        }
+
+        return -1;
+    }
+
     for(i = 0; i < frases.length; i++) {
-        if (frases[i].test(content)) {
-            console.log(frases[i].toString()  + ': line ' + findLine(content, frases[i]));
+        if (frases[i][1].test(content) && ((line = findLine(frases[i][1])) !== -1)) {
+            console.log(frases[i][0]  + ': line ' + line);
         }
     }
 
     for(i = 0; i < palavras.length; i++) {
-        if (palavras[i].test(content)) {
-            console.log(palavras[i].toString() + ': line ' + findLine(content, palavras[i]));
+        if (palavras[i][1].test(content) && ((line = findLine(palavras[i][1])) !== -1)) {
+            console.log(palavras[i][0] + ': line ' + line);
         }
     }
 });
